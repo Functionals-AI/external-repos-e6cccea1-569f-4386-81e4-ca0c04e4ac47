@@ -1,0 +1,52 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: create_user_credit_audit_table
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                schemaName: neura
+                tableName: user_credit_audit
+      changes:
+        - createTable:
+            schemaName: neura
+            tableName: user_credit_audit
+            catalogName: defaultdb
+            remarks: Table to audit changes to selected fields of user
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_user_credit_audit
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_id
+                  type: text
+              - column:
+                  name: created_time
+                  type: bigint
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: used_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: total_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: extra_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: credit_subscription_tier
+                  type: bigint
+                  defaultValue: "1"
