@@ -1,0 +1,105 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: create_table_neura_user
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                schemaName: neura
+                tableName: user
+      changes:
+        - createTable:
+            remarks: Table to store user information
+            schemaName: neura
+            tableName: user
+            catalogName: defaultdb
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_neura_user_id
+                    generatedByDefault: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: text
+              - column:
+                  name: created_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: modified_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: text
+              - column:
+                  name: modified_by
+                  type: text
+              - column:
+                  name: slug
+                  type: text
+                  constraints:
+                    unique: true
+              
+              # Entity specific fields
+              - column:
+                  name: full_name
+                  type: text
+              - column:
+                  name: email
+                  type: text
+                  constraints:
+                    unique: true
+              - column:
+                  name: external_id
+                  type: text
+              - column:
+                  name: roles
+                  type: text
+              - column:
+                  name: used_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: total_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: extra_credits
+                  type: bigint
+                  defaultValue: "0"
+              - column:
+                  name: mail_subscriptions
+                  type: text
+  - changeSet:
+      id: add_credit_subscription_tier_column
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - columnExists:
+                schemaName: neura
+                tableName: user
+                columnName: credit_subscription_tier
+      changes:
+        - addColumn:
+            schemaName: neura
+            tableName: user
+            columns:
+              - column:
+                  name: credit_subscription_tier
+                  type: bigint
+                  defaultValue: "1"
