@@ -1,0 +1,107 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: create_table_neura_software_designer_version
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                schemaName: neura
+                tableName: software_designer_version
+      changes:
+        - createTable:
+            remarks: Table to store software designer version information
+            schemaName: neura
+            tableName: software_designer_version
+            catalogName: defaultdb
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_neura_software_designer_version_id
+                    generatedByDefault: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: text
+              - column:
+                  name: created_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: modified_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: text
+              - column:
+                  name: modified_by
+                  type: text
+              - column:
+                  name: slug
+                  type: text
+                  constraints:
+                    unique: true
+
+              # Entity specific fields
+              - column:
+                  name: owner_id
+                  type: bigint
+              - column:
+                  name: session_id
+                  type: text
+              - column:
+                  name: section_paths
+                  type: text
+              - column:
+                  name: prompt
+                  type: text
+              - column:
+                  name: previous_document_version
+                  type: integer
+              - column:
+                  name: current_document_version
+                  type: integer
+              - column:
+                  name: schema_version
+                  type: integer
+              - column:
+                  name: software_designer_id
+                  type: bigint
+        - addForeignKeyConstraint:
+              baseTableSchemaName: neura
+              baseTableName: software_designer_version
+              baseColumnNames: software_designer_id
+              referencedTableSchemaName: neura
+              referencedTableName: software_designer
+              referencedColumnNames: id
+              constraintName: fk_neura_sdversion_designer
+              onDelete: CASCADE
+  - changeSet:
+      id: add_col_neura_software_designer_version_llm_response_description
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - columnExists:
+                schemaName: neura
+                tableName: software_designer_version
+                columnName: llm_response_description
+      changes:
+        - addColumn:
+            tableName: software_designer_version
+            columns:
+              - column:
+                  name: llm_response_description
+                  type: text
