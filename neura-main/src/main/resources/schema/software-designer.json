@@ -1,0 +1,194 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Status": {
+      "type": "string",
+      "enum": ["ToDo", "InProgress", "Done", "Blocked", "Review", "Approved", "Rejected"]
+    },
+    "Priority": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High"]
+    },
+    "UserStoryType": {
+      "type": "string",
+      "enum": ["Feature", "Bug", "Task", "Epic", "Story"]
+    },
+    "ImageType": {
+      "type": "string",
+      "enum": ["Url", "Base64", "Excalidraw", "Json", "Xml", "Svg", "Mermaid", "Markdown", "Code"]
+    },
+    "TestType": {
+      "type": "string",
+      "enum": ["Unit", "Integration", "System", "Acceptance"]
+    },
+    "ImageRenderer": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "type": { "$ref": "#/definitions/ImageType" },
+        "subType": { "type": "string" },
+        "data": { "type": "string" }
+      }
+    },
+    "TestCases": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true},
+        "type": { "$ref": "#/definitions/TestType" },
+        "expectedResult": { "type": "string" },
+        "actualResult": { "type": "string" }
+      }
+    },
+    "API": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "apiType": { "type": "string" },
+        "apiUrl": { "type": "string" },
+        "apiMethod": { "type": "string" },
+        "apiHeaders": { "type": "string" },
+        "apiBody": { "type": "string" },
+        "roleBasedAccessControl": { "type": "string" }
+      }
+    },
+    "DataLayer": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "entityRelations": { "$ref": "#/definitions/ImageRenderer" }
+      }
+    },
+    "Backend": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "deploymentStatus": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "codeReference": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "codeStatus": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "apis": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/API" }
+        },
+        "unitTestCases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TestCases" }
+        }
+      }
+    },
+    "Frontend": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "deploymentStatus": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "codeReference": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "codeStatus": { "type": "string", "hideEmpty": true, "llmIgnore": true },
+        "mocks": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ImageRenderer" }
+        },
+        "unitTestCases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TestCases" }
+        }
+      }
+    },
+    "Requirement": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "assumptions": { "type": "string" },
+        "constraints": { "type": "string" },
+        "targetRelease": { "type": "string", "userInput": true, "llmIgnore": true },
+        "actualRelease": { "type": "string", "userInput": true, "llmIgnore": true }
+      }
+    },
+    "UserStory": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "acceptanceCriteria": { "type": "string" },
+        "status": { "$ref": "#/definitions/Status", "userInput": true, "llmIgnore": true },
+        "priority": { "$ref": "#/definitions/Priority", "userInput": true, "llmIgnore": true },
+        "type": { "$ref": "#/definitions/UserStoryType" },
+        "owner": { "type": "string", "userInput": true, "llmIgnore": true },
+        "dueDate": { "type": "number", "userInput": true, "llmIgnore": true },
+        "completedDate": { "type": "string", "userInput": true, "llmIgnore": true },
+        "assignedTo": { "type": "string", "userInput": true, "llmIgnore": true }
+      }
+    },
+    "DetailedDesign": {
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "architectureOverview": { "type": "string" },
+        "architectureDiagram": { "$ref": "#/definitions/ImageRenderer" },
+        "dataLayer": { "$ref": "#/definitions/DataLayer" },
+        "dependencies": { "type": "string" },
+        "backend": {"$ref": "#/definitions/Backend"},
+        "frontend": {"$ref": "#/definitions/Frontend"},
+        "integrationTestCases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/TestCases" }
+        }
+      }
+    },
+    "OverallSystemArchitecture": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+        "architectureOverview": { "type": "string" },
+        "architectureDiagram": { "$ref": "#/definitions/ImageRenderer" }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "documentId": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "notes": { "type": "string", "userInput": true, "llmIgnore": true },
+    "executiveSummary": { "type": "string" },
+    "problemStatement": { "type": "string" },
+    "targetAudience": { "type": "string" },
+    "systemOverview": { "type": "string" },
+    "risks": { "type": "string" },
+    "tradeOffs": { "type": "string" },
+    "requirements": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Requirement" }
+    },
+    "userStories": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/UserStory" }
+    },
+    "detailedDesigns": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/DetailedDesign" }
+    },
+    "architecture": { "$ref": "#/definitions/OverallSystemArchitecture" }
+  }
+}
