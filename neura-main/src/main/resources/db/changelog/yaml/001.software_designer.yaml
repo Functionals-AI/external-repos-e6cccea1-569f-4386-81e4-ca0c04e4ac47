@@ -1,0 +1,95 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: create_table_neura_software_designer
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                schemaName: neura
+                tableName: software_designer
+      changes:
+        - createTable:
+            remarks: Table to store software designer information
+            schemaName: neura
+            tableName: software_designer
+            catalogName: defaultdb
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_neura_software_designer_id
+                    generatedByDefault: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: text
+              - column:
+                  name: created_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: modified_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: text
+              - column:
+                  name: modified_by
+                  type: text
+              - column:
+                  name: slug
+                  type: text
+                  constraints:
+                    unique: true
+              
+              # Entity specific fields
+              - column:
+                  name: session_id
+                  type: text
+              - column:
+                  name: owner_id
+                  type: bigint
+              - column:
+                  name: contributors
+                  type: text
+              - column:
+                  name: status
+                  type: text
+              - column:
+                  name: doc_session_status
+                  type: text
+              - column:
+                  name: document_version
+                  type: integer
+              - column:
+                  name: schema_version
+                  type: integer
+  - changeSet:
+      id: add_col_neura_software_designer_title
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - columnExists:
+                schemaName: neura
+                tableName: software_designer
+                columnName: title
+      changes:
+        - addColumn:
+            tableName: software_designer
+            columns:
+              - column:
+                  name: title
+                  type: text
