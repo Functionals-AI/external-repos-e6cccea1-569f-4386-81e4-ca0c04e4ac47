@@ -1,0 +1,99 @@
+---
+databaseChangeLog:
+  - changeSet:
+      id: create_table_neura_user_waitlist
+      author: anandr
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                schemaName: neura
+                tableName: user_waitlist
+      changes:
+        - createTable:
+            remarks: Table to store user waitlist information
+            schemaName: neura
+            tableName: user_waitlist
+            catalogName: defaultdb
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_neura_user_waitlist_id
+                    generatedByDefault: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: text
+              - column:
+                  name: created_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: modified_time
+                  type: BIGINT
+                  defaultValueComputed: "EXTRACT(EPOCH FROM NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: text
+              - column:
+                  name: modified_by
+                  type: text
+              - column:
+                  name: slug
+                  type: text
+                  constraints:
+                    unique: true
+              
+              # Entity specific fields
+              - column:
+                  name: status
+                  type: text
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: full_name
+                  type: text
+              - column:
+                  name: email
+                  type: text
+              - column:
+                  name: job_role
+                  type: text
+              - column:
+                  name: other_job_role
+                  type: text
+              - column:
+                  name: team_size
+                  type: text
+              - column:
+                  name: workflow
+                  type: text
+              - column:
+                  name: other_workflow
+                  type: text
+              - column:
+                  name: project_type
+                  type: text
+              - column:
+                  name: other_project_type
+                  type: text
+              - column:
+                  name: tailored_features
+                  type: text
+              - column:
+                  name: other_tailored_feature
+                  type: text
+              - column:
+                  name: mail_subscriptions
+                  type: text
